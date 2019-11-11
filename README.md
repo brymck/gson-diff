@@ -15,7 +15,7 @@ Include this in your POM:
 <dependency>
   <groupId>com.github.brymck</groupId>
   <artifactId>gson-diff</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.9.0</version>
 </dependency>
 ```
 
