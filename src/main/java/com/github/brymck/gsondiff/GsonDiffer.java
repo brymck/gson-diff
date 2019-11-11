@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GsonDiffer {
   /**
-   * Recursively diff one object with another, producing a {@link DiffResult} containing a list of
-   * differing keys and their values.
+   * Recursively diff one object with another, producing a {@link GsonDiffResult} containing a list
+   * of differing keys and their values.
    *
    * @param gson a {@link Gson} instance
    * @param before the original object
