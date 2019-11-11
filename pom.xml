@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.brymck</groupId>
   <artifactId>gson-diff</artifactId>
-  <version>0.9.0</version>
+  <version>0.9.1-SNAPSHOT</version>
   <name>gson-diff</name>
   <description>Diff objects with Gson</description>
   <url>https://github.com/brymck/gson-diff</url>
