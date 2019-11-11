@@ -3,6 +3,7 @@ package com.github.brymck.gsondiff;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.builder.Diff;
 import org.apache.commons.lang3.builder.DiffResult;
@@ -11,7 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class GsonDifferTest {
-  private Gson gson = new Gson();
+  // By default, Gson doesn't serialize nulls, which is fine, but to ensure we tested code paths
+  // with JSON nulls, we turn that on for testing
+  private Gson gson = new GsonBuilder().serializeNulls().create();
   private GsonDiffer gsonDiffer = new GsonDiffer();
 
   @Test
