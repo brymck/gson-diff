@@ -4,9 +4,7 @@ import com.google.gson.*;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.lang3.builder.DiffBuilder;
 import org.apache.commons.lang3.builder.DiffResult;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,27 +40,27 @@ public class GsonDiffer {
    * @return diffs between the two
    * @throws IllegalStateException when there is a type conflict
    */
-  public <T> DiffResult diff(@NotNull Gson gson, @NotNull T before, @NotNull T after)
+  public <T> GsonDiffResult diff(@NotNull Gson gson, @NotNull T before, @NotNull T after)
       throws IllegalStateException {
-    DiffBuilder diffBuilder = new DiffBuilder(before, after, ToStringStyle.JSON_STYLE);
+    GsonDiffResult.Builder diffBuilder = new GsonDiffResult.Builder();
     JsonObject beforeElement = gson.toJsonTree(before).getAsJsonObject();
     JsonObject afterElement = gson.toJsonTree(after).getAsJsonObject();
     return diff(diffBuilder, beforeElement, afterElement, "");
   }
 
   /**
-   * Recursively diff one object with another, producing a {@link DiffResult} containing a list of
-   * differing keys and their values.
+   * Recursively diff one object with another, producing a {@link GsonDiffResult} containing a list
+   * of differing keys and their values.
    *
-   * @param diffBuilder a {@link DiffBuilder}
+   * @param diffBuilder a {@link GsonDiffResult.Builder}
    * @param before the original object
    * @param after the modified object
    * @param prefix the key prefix
    * @return diffs between the two
    * @throws IllegalStateException when there is a type conflict
    */
-  private @NotNull DiffResult diff(
-      @NotNull DiffBuilder diffBuilder,
+  private @NotNull GsonDiffResult diff(
+      @NotNull GsonDiffResult.Builder diffBuilder,
       @NotNull JsonObject before,
       @NotNull JsonObject after,
       @NotNull String prefix) {
@@ -103,7 +101,7 @@ public class GsonDiffer {
             }
           }
           if (addedCount != 0 || removedCount != 0) {
-            diffBuilder.append(fullKey, -removedCount, addedCount);
+            diffBuilder.put(fullKey, -removedCount, addedCount);
           }
         } else if (afterElement.isJsonObject()) {
           // Update objects, preferring the update value
@@ -174,7 +172,7 @@ public class GsonDiffer {
   }
 
   private void createPrimitiveDiffItem(
-      @NotNull DiffBuilder diffBuilder,
+      @NotNull GsonDiffResult.Builder diffBuilder,
       @NotNull String key,
       @Nullable JsonElement beforeElement,
       @Nullable JsonElement afterElement) {
@@ -188,28 +186,30 @@ public class GsonDiffer {
       Boolean beforeValue = (beforePrimitive == null) ? null : beforePrimitive.getAsBoolean();
       Boolean afterValue = (afterPrimitive == null) ? null : afterPrimitive.getAsBoolean();
       if (beforeValue != afterValue) {
-        diffBuilder.append(key, beforeValue, afterValue);
+        diffBuilder.put(key, beforeValue, afterValue);
       }
     } else if (checkedPrimitive.isNumber()) {
       Double beforeValue = (beforePrimitive == null) ? null : beforePrimitive.getAsDouble();
       Double afterValue = (afterPrimitive == null) ? null : afterPrimitive.getAsDouble();
       if (beforeValue == null || !beforeValue.equals(afterValue)) {
-        diffBuilder.append(key, beforeValue, afterValue);
+        diffBuilder.put(key, beforeValue, afterValue);
       }
     } else {
       String beforeValue = (beforePrimitive == null) ? null : beforePrimitive.getAsString();
       String afterValue = (afterPrimitive == null) ? null : afterPrimitive.getAsString();
       if (beforeValue == null || !beforeValue.equals(afterValue)) {
-        diffBuilder.append(key, beforeValue, afterValue);
+        diffBuilder.put(key, beforeValue, afterValue);
       }
     }
   }
 
   private void createAddedDiffItems(
-      @NotNull DiffBuilder diffBuilder, @NotNull String key, @NotNull JsonElement element) {
+      @NotNull GsonDiffResult.Builder diffBuilder,
+      @NotNull String key,
+      @NotNull JsonElement element) {
     if (element.isJsonArray()) {
       int count = element.getAsJsonArray().size();
-      diffBuilder.append(key, 0, count);
+      diffBuilder.put(key, 0, count);
     } else if (element.isJsonObject()) {
       for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
         String subKey = entry.getKey();
@@ -222,10 +222,12 @@ public class GsonDiffer {
   }
 
   private void createRemovedDiffItems(
-      @NotNull DiffBuilder diffBuilder, @NotNull String key, @NotNull JsonElement element) {
+      @NotNull GsonDiffResult.Builder diffBuilder,
+      @NotNull String key,
+      @NotNull JsonElement element) {
     if (element.isJsonArray()) {
       int count = element.getAsJsonArray().size();
-      diffBuilder.append(key, -count, 0);
+      diffBuilder.put(key, -count, 0);
     } else if (element.isJsonObject()) {
       for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
         String subKey = entry.getKey();
