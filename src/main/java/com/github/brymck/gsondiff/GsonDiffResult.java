@@ -47,7 +47,8 @@ public class GsonDiffResult {
    * Retrieve a string-based diff
    *
    * @param key the property's name
-   * @return a diff containing the property's name and the string values on the left- and right-hand side
+   * @return a diff containing the property's name and the string values on the left- and right-hand
+   *     side
    */
   public @NotNull GsonDiff<@NotNull String> getStringDiff(@NotNull String key) {
     return strings.get(key);
@@ -57,7 +58,8 @@ public class GsonDiffResult {
    * Retrieve a double-based diff
    *
    * @param key the property's name
-   * @return a diff containing the property's name and the double values on the left- and right-hand side
+   * @return a diff containing the property's name and the double values on the left- and right-hand
+   *     side
    */
   public @NotNull GsonDiff<@NotNull Double> getDoubleDiff(@NotNull String key) {
     return doubles.get(key);
@@ -67,7 +69,8 @@ public class GsonDiffResult {
    * Retrieve an integer-based diff
    *
    * @param key the property's name
-   * @return a diff containing the property's name and the integer values on the left- and right-hand side
+   * @return a diff containing the property's name and the integer values on the left- and
+   *     right-hand side
    */
   public @NotNull GsonDiff<@NotNull Integer> getIntegerDiff(@NotNull String key) {
     return integers.get(key);
@@ -77,7 +80,8 @@ public class GsonDiffResult {
    * Retrieve a boolean-based diff
    *
    * @param key the property's name
-   * @return a diff containing the property's name and the boolean values on the left- and right-hand side
+   * @return a diff containing the property's name and the boolean values on the left- and
+   *     right-hand side
    */
   public @NotNull GsonDiff<@NotNull Boolean> getBooleanDiff(@NotNull String key) {
     return booleans.get(key);
@@ -101,9 +105,7 @@ public class GsonDiffResult {
     return new Builder();
   }
 
-  /**
-   * This class allows you to incrementally create a {@link GsonDiffResult}
-   */
+  /** This class allows you to incrementally create a {@link GsonDiffResult} */
   public static class Builder {
     Map<String, GsonDiff<String>> strings = new HashMap<>();
     Map<String, GsonDiff<Double>> doubles = new HashMap<>();
